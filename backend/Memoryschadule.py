@@ -1,8 +1,12 @@
 def process_allocation(processes, partitions, algorithm):
     answer = []
     original_partitions = partitions[:] 
-    sorted_partitions = sorted(partitions)  # Sort partitions for allocation
-    allocated_partitions = sorted_partitions[:] 
+    if algorithm == 'Best-Fit' or algorithm == 'Worst-Fit':
+        sorted_partitions = sorted(partitions)
+        allocated_partitions = sorted_partitions[:]
+    else:
+        sorted_partitions = partitions[:]  # Keep original order
+        allocated_partitions = partitions[:]
 
     #print(f"Processing allocation with: Processes={processes}, Partitions={partitions}, Algorithm={algorithm}")
 
@@ -74,7 +78,7 @@ def process_allocation(processes, partitions, algorithm):
 # Example usage
 processes = [234, 417, 322, 122]
 partitions = [600, 500, 300, 100, 200]  
-algorithm = 'Worst-Fit'
+algorithm = 'First-Fit'
 
 result = process_allocation(processes, partitions, algorithm)
 for allocation in result:

@@ -7,8 +7,12 @@ CORS(app)
 def process_allocation(processes, partitions, algorithm):
     answer = []
     original_partitions = partitions[:] 
-    sorted_partitions = sorted(partitions)  # Sort partitions for allocation
-    allocated_partitions = sorted_partitions[:] 
+    if algorithm == 'Best-Fit' or algorithm == 'Worst-Fit':
+        sorted_partitions = sorted(partitions)
+        allocated_partitions = sorted_partitions[:]
+    else:
+        sorted_partitions = partitions[:]  # Keep original order
+        allocated_partitions = partitions[:]
 
     #print(f"Processing allocation with: Processes={processes}, Partitions={partitions}, Algorithm={algorithm}")
 
