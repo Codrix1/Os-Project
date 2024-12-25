@@ -146,6 +146,12 @@ function Visualizer() {
 
   return (
     <div className="container mt-4">
+      <div className="row mb-3 align-items-center">
+        <h1 className="text-center text-4xl md:text-5xl font-extrabold text-white">
+          Memory Management Demo
+        </h1>
+      </div>
+
       {error && (
         <div className="alert alert-danger text-center" role="alert">
           {error}
@@ -244,7 +250,7 @@ function Visualizer() {
           </ul>
         </div>
         <div className="col-3">
-          <h5>Partitions</h5>
+          <h5 className="text-center  text-white">Partitions</h5>
           <ul className="list-group">
             {partitions.map((partition, index) => (
               <li key={index} className= {`list-group-item list-group-item-partition-${index}`} >
