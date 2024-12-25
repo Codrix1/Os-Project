@@ -240,94 +240,120 @@ function Visualizer() {
       {/* Display Lists */}
       <div className="row">
         <div className="col-3">
-          <h5>Processes</h5>
-          <ul className="list-group">
-            {processes.map((process, index) => (
-              <li key={index} className={`list-group-item list-group-item-process-${index}`}>
-                {process}
-              </li>
-            ))}
-          </ul>
+          <h5 className="text-center  text-white">Processes</h5>
+          <div className="">
+            <ul className="list-group">
+              {processes.map((process, index) => (
+                <li
+                  key={index}
+                  className={`text-center text-white list-group-item list-group-item-process-${index} bg-dark border bg-opacity-70 m-2`}
+                >
+                  {process}
+                </li>
+              ))}
+            </ul>
+          </div>
+            
         </div>
         <div className="col-3">
           <h5 className="text-center  text-white">Partitions</h5>
-          <ul className="list-group">
-            {partitions.map((partition, index) => (
-              <li key={index} className= {`list-group-item list-group-item-partition-${index}`} >
-                {partition}
-              </li>
-            ))}
-          </ul>
+          <div className="">
+            <ul className="list-group">
+              {partitions.map((process, index) => (
+                <li
+                  key={index}
+                  className={`text-center text-white list-group-item list-group-item-partition-${index} bg-dark border bg-opacity-70 m-2`}
+                >
+                  {process}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className="col-6">
+        <div className="col-6 ">
           {data.map((item, parentIndex) => {
-            const parentSize = item[0]; // Parent partition size
-            const processes = item.slice(1); // Child processes
-
-            // Check if all processes are 0
-            const hasNoProcesses = processes.every((process) => process === 0);
-
-            return (
-              <div key={parentIndex} className="mb-4">
+                        const parentSize = item[0]; // Parent partition size
+                        const processes = item.slice(1); // Child processes
+                      
+                        // Check if all processes are 0
+                        const hasNoProcesses = processes.every((process) => process === 0);
+                      
+                        return (
+                          <div key={parentIndex} className="mb-4 bg-opacity-70">
+                            <div
+                              className={`text-light bg-light border mb-2 parent bg-opacity-60 bg-dark `}
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                paddingTop:"3px",
+                                width: "100%",
+                                borderRadius: "7px",
+                                position: "relative",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontWeight: "bold",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  gap: "8px", // Space between parent name and "No Process"
+                                }}
+                              >
+                                {parentSize === 0
+                                  ? "These processes will wait:"
+                                  : `Partition: ${parentSize}`}
+                                {hasNoProcesses && (
+                                  <span style={{ fontWeight: "normal", color: "gray" }}>
+                                    (No Process)
+                                  </span>
+                                )}
+                              </div>
+                              <div
+                                className="process-container"
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: "2px",
+                                }}
+                              >
+                                {processes.map((process, processIndex) => {
+              if (process === 0) return null; // Skip if process is 0
+                                
+              // Calculate width percentage based on parent size
+              const widthPercentage =
+                parentSize > 0 ? `${((process / parentSize) * 100)-2}%` : "98%";
+                                
+              return (
                 <div
-                  className={`bg-light border mb-2 parent`}
+                  key={processIndex}
+                  className="bg-primary process"
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    paddingTop:"3px",
-                    width: "100%",
-                    borderRadius: "7px",
-                    position: "relative",
+                    margin: "1px",
+                    color: '#ffffff', // Light blue
+                    borderRadius: "5px",
+                    flex: `0 0 ${widthPercentage}`, // Dynamic width
+                    textAlign: "center",
                   }}
                 >
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "8px", // Space between parent name and "No Process"
-                    }}
-                  >
-                    {parentSize === 0
-                      ? "These processes will wait:"
-                      : `Partition: ${parentSize}`}
-                    {hasNoProcesses && (
-                      <span style={{ fontWeight: "normal", color: "gray" }}>
-                        (No Process)
-                      </span>
-                    )}
-                  </div>
-                  <div
-                    className="process-container"
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "2px",
-                    }}
-                  >
-                    {processes.map((process, processIndex) => {
-                        if (process === 0) return null; // Skip if process is 0
-
-                        // Calculate width percentage based on parent size
-                        const widthPercentage =
-                          parentSize > 0 ? `${(process / parentSize) * 100}%` : "100%";
-
-                        return (
-                          <div
-                            key={processIndex}
-                            className={` bg-blue text-black border process`}
-                            style={{
-                              borderRadius: "5px",
-                              flex: `0 0 ${widthPercentage}`, // Dynamic width
-                              textAlign: "center",
-                            }}
-                          >
-                            {process}
-                          </div>
-                        );
-                      })
-                    }
+                  {process}
+                </div>
+              );
+            })}
+            {processes.some(process => process > 0) && parentSize > 0 && (
+              <div
+                className="bg-light text-dark process remainder "
+                style={{ // White
+                  margin: "2px",
+                  borderRadius: "5px",
+                  flex: `0 0 ${(100 - processes.reduce((sum, process) => sum + (process / parentSize) * 100, 0))}%`, // Remaining space
+                  textAlign: "center",
+                }}
+              >
+                {Math.max(0, parentSize - processes.reduce((sum, process) => sum + process, 0))}
+              </div>
+            )}
+            
                   </div>
                 </div>
               </div>
